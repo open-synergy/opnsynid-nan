@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 OpenSynergy Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+<openerp>
+<data>
+
+<record id="res_company_view_form" model="ir.ui.view">
+    <field name="name">res.company form</field>
+    <field name="model">res.company</field>
+    <field name="inherit_id" ref="base.view_company_form"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@string='Configuration']" position="inside">
+                <group name="grp_nan_production_cost" string="Production Cost" colspan="4" col="2">
+                    <field name="raw_material_journal_ids" widget="many2many_tags"/>
+                    <field name="direct_labour_journal_ids" widget="many2many_tags"/>
+                    <field name="foh_journal_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </data>
+    </field>
+</record>
+
+</data>
+</openerp>
