@@ -67,6 +67,20 @@ class ProductionCostCase(TransactionCase):
             "product_uom": self.kg.id,
             "product_qty": 0.1,
         })
+        self.journal1 = self.env.ref(
+            "mrp.analytic_journal_materials")
+        self.journal2 = self.env.ref(
+            "mrp.analytic_journal_operators")
+        self.journal3 = self.env[
+            "account.analytic.journal"].create({
+                "name": "FOH Journal",
+                "type": "general"})
+        self.company = self.env.ref("base.main_company")
+        self.company.write({
+            "raw_material_journal_ids": [(6, 0, [self.journal1.id])],
+            "direct_labour_journal_ids": [(6, 0, [self.journal2.id])],
+            "foh_journal_ids": [(6, 0, [self.journal3.id])],
+            })
 
     def test_1(self):
         mo = self.obj_mo.create({
