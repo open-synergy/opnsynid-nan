@@ -24,7 +24,8 @@ class ProductionCostCase(TransactionCase):
         self.main_product = self._create_product(
             "Iso Eugenol")
         self.raw_product1 = self._create_product(
-            "Crude Iso Eugenol")
+            "Crude Iso Eugenol",
+            1500.00)
         self.byproduct1 = self._create_product(
             "Iso Eugenol FF1")
         self.byproduct2 = self._create_product(
@@ -80,16 +81,35 @@ class ProductionCostCase(TransactionCase):
             "byproduct_calculation_ids": onchange[
                 "value"]["byproduct_calculation_ids"],
         })
-
+        const = 1
+        for byproduct in mo.byproduct_calculation_ids:
+            byproduct.multiplier = 0.01 * const
+            const += 1
         mo.signal_workflow("button_confirm")
         self.assertEqual(
             len(mo.byproduct_calculation_ids),
             3)
+        for consu in mo.move_lines:
+            consu.action_done()
+        self.assertEqual(
+            mo.raw_material_cost,
+            150000.0)
+        for byproduct in mo.byproduct_calculation_ids:
+            self.assertEqual(
+                byproduct.byproduct_cost,
+                byproduct.multiplier * 150000.00)
+        self.assertEqual(
+            mo.byproduct_cost,
+            9000.0)
+        self.assertEqual(
+            mo.main_product_cost,
+            141000.0)
 
-    def _create_product(self, name):
+    def _create_product(self, name, cost=0.0):
         return self.obj_product.create({
             "name": name,
             "uom_id": self.kg.id,
             "uom_po_id": self.kg.id,
             "cost_method": "real",
+            "standard_price": cost,
         })
