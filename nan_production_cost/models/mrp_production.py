@@ -4,6 +4,7 @@
 
 from openerp import models, api, fields
 
+
 class MrpByproductCostCalculation(models.Model):
     _name = "nan.mrp_byproduct_cost_calculation"
     _description = "Byproduct Cost Calculation"
@@ -34,7 +35,6 @@ class MrpByproductCostCalculation(models.Model):
 
 class MrpProduction(models.Model):
     _inherit = "mrp.production"
-
 
     @api.depends(
         "raw_material_cost_ids", "direct_labour_cost_ids",
@@ -145,10 +145,15 @@ class MrpProduction(models.Model):
         )
 
     @api.multi
-    def action_open_raw_material_cost(self):
+    def _open_cost(self, journals, title=""):
         self.ensure_one()
-        journal_ids = self.company_id.raw_material_journal_ids.ids
-        domain = "[('journal_id', 'in', %s), ('mrp_production_id', '=', %s)]" % (str(journal_ids), str(self.id))
+        journal_ids = journals.ids
+        view = self.env.ref(
+            "nan_production_cost.account_analytic_line_view_tree")
+        domain = [
+            ('journal_id', 'in', journal_ids),
+            ('mrp_production_id', '=', self.id)
+            ]
         context = {
             "default_mrp_production_id": self.id,
             "default_product_id": False,
@@ -156,61 +161,42 @@ class MrpProduction(models.Model):
             "default_account_id": self.analytic_account_id.id,
             }
         result = {
-            "name": "Raw Material Costs",
+            "name": title,
             "type": "ir.actions.act_window",
             "res_model": "account.analytic.line",
             "view_type": "form",
             "view_mode": "tree",
-            "view_id": self.env.ref("nan_production_cost.account_analytic_line_view_tree").id,
+            "view_id": view.id,
             "domain": domain,
             "context": context,
             }
+        return result
+
+    @api.multi
+    def action_open_raw_material_cost(self):
+        self.ensure_one()
+        result = self._open_cost(
+            self.raw_material_journal_ids,
+            "Raw Material Cost",
+            )
         return result
 
     @api.multi
     def action_open_direct_labour_cost(self):
         self.ensure_one()
-        journal_ids = self.company_id.direct_labour_journal_ids.ids
-        domain = "[('journal_id', 'in', %s), ('mrp_production_id', '=', %s)]" % (str(journal_ids), str(self.id))
-        context = {
-            "default_mrp_production_id": self.id,
-            "default_product_id": False,
-            "default_general_account_id": False,
-            "default_account_id": self.analytic_account_id.id,
-            }
-        result = {
-            "name": "Raw Material Costs",
-            "type": "ir.actions.act_window",
-            "res_model": "account.analytic.line",
-            "view_type": "form",
-            "view_mode": "tree",
-            "view_id": self.env.ref("nan_production_cost.account_analytic_line_view_tree").id,
-            "domain": domain,
-            "context": context,
-            }
+        result = self._open_cost(
+            self.direct_labour_journal_ids,
+            "Direct Labour Cost",
+            )
         return result
 
     @api.multi
     def action_open_foh_cost(self):
         self.ensure_one()
-        journal_ids = self.company_id.foh_journal_ids.ids
-        domain = "[('journal_id', 'in', %s), ('mrp_production_id', '=', %s)]" % (str(journal_ids), str(self.id))
-        context = {
-            "default_mrp_production_id": self.id,
-            "default_product_id": False,
-            "default_general_account_id": False,
-            "default_account_id": self.analytic_account_id.id,
-            }
-        result = {
-            "name": "Raw Material Costs",
-            "type": "ir.actions.act_window",
-            "res_model": "account.analytic.line",
-            "view_type": "form",
-            "view_mode": "tree",
-            "view_id": self.env.ref("nan_production_cost.account_analytic_line_view_tree").id,
-            "domain": domain,
-            "context": context,
-            }
+        result = self._open_cost(
+            self.foh_journal_ids,
+            "FOH Cost",
+            )
         return result
 
     @api.multi
@@ -230,8 +216,8 @@ class MrpProduction(models.Model):
                     a.append((0, 0, res))
 
         result["value"].update({"byproduct_calculation_ids":  a})
-        # raise models.ValidationError(str(result))
         return result
+
 
 class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
@@ -241,14 +227,11 @@ class AccountAnalyticLine(models.Model):
         account = False
         if self.product_id:
             self.name = self.product_id.name
-            if self.product_id.property_account_expense:
-                account = self.product_id.property_account_expense.id
+            product = self.product_id
+            categ = self.product_id.categ_id
+            if product.property_account_expense:
+                account = product.property_account_expense.id
             else:
-                if self.product_id.categ_id.property_account_expense_categ:
-                    account = self.product_id.categ_id.property_account_expense_categ.id
+                if categ.property_account_expense_categ:
+                    account = categ.property_account_expense_categ.id
         self.general_account_id = account
-
-
-
-
-
