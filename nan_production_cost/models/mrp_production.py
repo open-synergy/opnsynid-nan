@@ -217,21 +217,3 @@ class MrpProduction(models.Model):
 
         result["value"].update({"byproduct_calculation_ids":  a})
         return result
-
-
-class AccountAnalyticLine(models.Model):
-    _inherit = "account.analytic.line"
-
-    @api.onchange("product_id")
-    def onchange_product(self):
-        account = False
-        if self.product_id:
-            self.name = self.product_id.name
-            product = self.product_id
-            categ = self.product_id.categ_id
-            if product.property_account_expense:
-                account = product.property_account_expense.id
-            else:
-                if categ.property_account_expense_categ:
-                    account = categ.property_account_expense_categ.id
-        self.general_account_id = account
