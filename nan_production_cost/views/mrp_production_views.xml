@@ -4,16 +4,16 @@
 
 <openerp>
 <data>
-        <record model="ir.ui.view" id="mrp.mrp_production_buttons">
-            <field name="name">mrp.production.buttons</field>
-            <field name="model">mrp.production</field>
-            <field name="inherit_id" ref="mrp.mrp_production_form_view" />
-            <field name="arch" type="xml">
-                <div class="oe_title" position="after">
-                    <div class="oe_right oe_button_box" name="buttons"/>
-                </div>
-            </field>
-        </record>
+<record model="ir.ui.view" id="mrp.mrp_production_buttons">
+    <field name="name">mrp.production.buttons</field>
+    <field name="model">mrp.production</field>
+    <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+    <field name="arch" type="xml">
+        <div class="oe_title" position="after">
+            <div class="oe_right oe_button_box" name="buttons"/>
+        </div>
+    </field>
+</record>
         
 <record id="mrp_production_view_form" model="ir.ui.view">
     <field name="name">mrp.production form</field>
@@ -59,48 +59,11 @@
         <data>
             <xpath expr="//notebook" position="inside">
                 <page string="Production Cost">
-                    <group name="grp_cost_invisible" colspan="4" col="2">
+                    <group name="grp_cost_invisible" colspan="4" col="2" invisible="1">
                         <field name="raw_material_journal_ids" widget="many2many_tags"/>
                         <field name="direct_labour_journal_ids" widget="many2many_tags"/>
                         <field name="foh_journal_ids" widget="many2many_tags"/>
                     </group>
-                    <!-- <group name="grp_raw_material_cost" string="Raw Material Cost" colspan="4" col="4"> -->
-                    <!--     <field name="raw_material_cost_ids" colspan="4" nolabel="1"  -->
-                    <!--         domain="[('journal_id','in',raw_material_journal_ids)]"> -->
-                    <!--         <tree> -->
-                    <!--             <field name="product_id"/> -->
-                    <!--             <field name="unit_amount"/> -->
-                    <!--             <field name="product_uom_id"/> -->
-                    <!--             <field name="amount"/> -->
-                    <!--             <field name="journal_id"/> -->
-                    <!--             <field name="general_account_id"/> -->
-                    <!--         </tree> -->
-                    <!--     </field> -->
-                    <!-- </group> -->
-                    <!-- <group name="grp_direct_labour_cost" string="Direct Labour Cost" colspan="4" col="4"> -->
-                    <!--     <field name="direct_labour_cost_ids" colspan="4" nolabel="1" domain="[('journal_id','in',direct_labour_journal_ids)]"> -->
-                    <!--         <tree> -->
-                    <!--             <field name="product_id"/> -->
-                    <!--             <field name="unit_amount"/> -->
-                    <!--             <field name="product_uom_id"/> -->
-                    <!--             <field name="amount"/> -->
-                    <!--             <field name="journal_id"/> -->
-                    <!--             <field name="general_account_id"/> -->
-                    <!--         </tree> -->
-                    <!--     </field> -->
-                    <!-- </group> -->
-                    <!-- <group name="grp_foh_cost" string="FOH Cost" colspan="4" col="4"> -->
-                    <!--     <field name="foh_cost_ids" colspan="4" nolabel="1"> -->
-                    <!--         <tree> -->
-                    <!--             <field name="product_id"/> -->
-                    <!--             <field name="unit_amount"/> -->
-                    <!--             <field name="product_uom_id"/> -->
-                    <!--             <field name="amount"/> -->
-                    <!--             <field name="journal_id"/> -->
-                    <!--             <field name="general_account_id"/> -->
-                    <!--         </tree> -->
-                    <!--     </field> -->
-                    <!-- </group> -->
                     <group name="grp_byproduct_calculation" string="Byproduct Calculation" colspan="4" col="4">
                         <field name="byproduct_calculation_ids" colspan="4" nolabel="1">
                             <tree string="Byproduct Calculation" editable="bottom" create="false" delete="false">
