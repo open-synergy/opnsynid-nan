@@ -163,7 +163,7 @@ class ProductionCostCase(TransactionCase):
             "name": name,
             "product_id": product and product.id or False,
             "amount": -1.0 * amount,
-            "journal_id": self.journal2.id,
+            "journal_id": journal.id,
             "account_id": analytic.id,
             "general_account_id": account.id,
             "mrp_production_id": mo.id,
