@@ -109,14 +109,14 @@ class ProductionCostCase(TransactionCase):
         self.assertEqual(
             len(mo.byproduct_calculation_ids),
             3)
-        mo.action_open_raw_material_cost()
-        mo.action_open_direct_labour_cost()
-        mo.action_open_foh_cost()
         for consu in mo.move_lines:
             consu.action_done()
         self.assertEqual(
             mo.raw_material_cost,
             150000.0)
+        self.assertEqual(
+            len(mo.raw_material_cost_ids),
+            1)
         for byproduct in mo.byproduct_calculation_ids:
             self.assertEqual(
                 byproduct.byproduct_cost,

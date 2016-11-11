@@ -310,61 +310,6 @@ class MrpProduction(models.Model):
     )
 
     @api.multi
-    def _open_cost(self, journals, title=""):
-        self.ensure_one()
-        journal_ids = journals.ids
-        view = self.env.ref(
-            "nan_production_cost.account_analytic_line_view_tree")
-        domain = [
-            ('journal_id', 'in', journal_ids),
-            ('mrp_production_id', '=', self.id)
-        ]
-        context = {
-            "default_mrp_production_id": self.id,
-            "default_product_id": False,
-            "default_general_account_id": False,
-            "default_account_id": self.analytic_account_id.id,
-        }
-        result = {
-            "name": title,
-            "type": "ir.actions.act_window",
-            "res_model": "account.analytic.line",
-            "view_type": "form",
-            "view_mode": "tree",
-            "view_id": view.id,
-            "domain": domain,
-            "context": context,
-        }
-        return result
-
-    @api.multi
-    def action_open_raw_material_cost(self):
-        self.ensure_one()
-        result = self._open_cost(
-            self.raw_material_journal_ids,
-            "Raw Material Cost",
-        )
-        return result
-
-    @api.multi
-    def action_open_direct_labour_cost(self):
-        self.ensure_one()
-        result = self._open_cost(
-            self.direct_labour_journal_ids,
-            "Direct Labour Cost",
-        )
-        return result
-
-    @api.multi
-    def action_open_foh_cost(self):
-        self.ensure_one()
-        result = self._open_cost(
-            self.foh_journal_ids,
-            "FOH Cost",
-        )
-        return result
-
-    @api.multi
     def bom_id_change(self, bom_id):
         result = super(MrpProduction, self).bom_id_change(bom_id)
         obj_bom = self.env["mrp.bom"]
@@ -382,3 +327,7 @@ class MrpProduction(models.Model):
 
         result["value"].update({"byproduct_calculation_ids":  a})
         return result
+
+    @api.multi
+    def calculate_production_estimated_cost(self):
+        pass
