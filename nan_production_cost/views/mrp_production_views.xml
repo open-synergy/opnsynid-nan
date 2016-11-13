@@ -64,21 +64,104 @@
                         <field name="direct_labour_journal_ids" widget="many2many_tags"/>
                         <field name="foh_journal_ids" widget="many2many_tags"/>
                     </group>
+                    <separator string="Raw Material Cost" colspan="4"/>
+                    <field name="raw_material_cost_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom" create="false" edit="true" delete="false">
+                            <field name="date"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="unit_amount"/>
+                            <field name="product_uom_id"/>
+                            <field name="journal_id"/>
+                            <field name="account_id"/>
+                            <field name="general_account_id" invisible="1"/>
+                            <field name="amount" string="Actual Cost"/>
+                            <field name="estim_std_cost"/>
+                            <field name="estim_avg_cost"/>
+                            <field name="mrp_production_id" invisible="1"/>
+                        </tree>
+                    </field>
+                    <separator string="Direct Labour Cost" colspan="4"/>
+                    <field name="direct_labour_cost_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="date"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="unit_amount"/>
+                            <field name="product_uom_id"/>
+                            <field name="journal_id"/>
+                            <field name="account_id"/>
+                            <field name="general_account_id" invisible="1"/>
+                            <field name="amount" string="Actual Cost"/>
+                            <field name="estim_std_cost"/>
+                            <field name="estim_avg_cost"/>
+                            <field name="mrp_production_id" invisible="1"/>
+                        </tree>
+                    </field>
+                    <separator string="FoH Cost" colspan="4"/>
+                    <field name="foh_cost_ids" colspan="4" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="date"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="unit_amount"/>
+                            <field name="product_uom_id"/>
+                            <field name="journal_id"/>
+                            <field name="account_id"/>
+                            <field name="general_account_id" invisible="1"/>
+                            <field name="amount" string="Actual Cost"/>
+                            <field name="estim_std_cost"/>
+                            <field name="estim_avg_cost"/>
+                            <field name="mrp_production_id" invisible="1"/>
+                        </tree>
+                    </field>
                     <group name="grp_byproduct_calculation" string="Byproduct Calculation" colspan="4" col="4">
                         <field name="byproduct_calculation_ids" colspan="4" nolabel="1">
                             <tree string="Byproduct Calculation" editable="bottom" create="false" delete="false">
                                 <field name="product_id"/>
                                 <field name="multiplier"/>
                                 <field name="byproduct_cost"/>
+                                <field name="avg_byproduct_cost"/>
+                                <field name="std_byproduct_cost"/>
                             </tree>
                         </field>
                     </group>
-                    <group name="grp_cost_calculation" string="Cost Calculation" colspan="4" col="2">
-                        <field name="raw_material_cost"/>
-                        <field name="byproduct_cost"/>
-                        <field name="direct_labour_cost"/>
-                        <field name="foh_cost"/>
-                        <field name="main_product_cost"/>
+                    <group name="grp_cost_calculation" colspan="4" col="2">
+                        <group name="grp_avg_cost_calculation" string="Avg. Cost Calculation" colspan="1" col="2">
+                            <field name="avg_raw_material_cost"/>
+                            <field name="avg_direct_labour_cost"/>
+                            <field name="avg_foh_cost"/>
+                            <field name="avg_byproduct_cost"/>
+                            <field name="avg_cost"/>
+                            <!-- <field name="unit_avg_cost"/> -->
+                        </group>
+                        <group name="grp_std_cost_calculation" string="Std. Cost Calculation" colspan="1" col="2">
+                            <field name="std_raw_material_cost"/>
+                            <field name="std_direct_labour_cost"/>
+                            <field name="std_foh_cost"/>
+                            <field name="std_byproduct_cost"/>
+                            <field name="std_cost"/>
+                            <!-- <field name="unit_std_cost"/> -->
+                        </group>
+                        <group name="grp_cost_calculation" string="Cost Calculation" colspan="1" col="2">
+                            <field name="raw_material_cost"/>
+                            <field name="byproduct_cost"/>
+                            <field name="direct_labour_cost"/>
+                            <field name="foh_cost"/>
+                            <field name="main_product_cost"/>
+                        </group>
+                        <group name="grp_cost_diff_calculation" string="Cost Variant Calculation" colspan="1" col="2">
+                            <field name="diff_avg_raw_material_cost"/>
+                            <field name="diff_std_raw_material_cost"/>
+                            <field name="diff_avg_byproduct_cost"/>
+                            <field name="diff_std_byproduct_cost"/>
+                            <field name="diff_avg_direct_labour_cost"/>
+                            <field name="diff_std_direct_labour_cost"/>
+                            <field name="diff_avg_foh_cost"/>
+                            <field name="diff_std_foh_cost"/>
+                            <field name="diff_avg_main_product_cost"/>
+                            <field name="diff_std_main_product_cost"/>
+                        </group>
                     </group>
                 </page>
             </xpath>
@@ -86,5 +169,20 @@
     </field>
 </record>
 
+<record id="mrp_production_view_form_3" model="ir.ui.view">
+    <field name="name">mrp.production form - remove original cost computation</field>
+    <field name="model">mrp.production</field>
+    <field name="inherit_id" ref="mrp_production_estimated_cost.mrp_production_form_view_inh_estimatedcost"/>
+    <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='std_cost']" position="replace"/>
+            <xpath expr="//field[@name='unit_std_cost']" position="replace"/>
+            <xpath expr="//field[@name='avg_cost']" position="replace"/>
+            <xpath expr="//field[@name='unit_avg_cost']" position="replace"/>
+            <xpath expr="//field[@name='product_cost']" position="replace"/>
+            <xpath expr="//field[@name='product_manual_cost']" position="replace"/>
+        </data>
+    </field>
+</record>
 </data>
 </openerp>

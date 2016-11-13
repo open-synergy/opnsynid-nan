@@ -16,7 +16,9 @@
             <field name="journal_id"/>
             <field name="account_id"/>
             <field name="general_account_id" invisible="1"/>
-            <field name="amount"/>
+            <field name="amount" string="Actual Cost"/>
+            <field name="estim_std_cost"/>
+            <field name="estim_avg_cost"/>
             <field name="mrp_production_id" invisible="1"/>
         </tree>
     </field>
