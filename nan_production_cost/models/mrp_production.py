@@ -108,15 +108,8 @@ class MrpProduction(models.Model):
 
     @api.multi
     def _inverse_raw_material_cost(self):
-        obj_line = self.env["account.analytic.line"]
         for mo in self:
-            criteria = [
-                ("mrp_production_id", "=", mo.id),
-                ("id", "not in", mo.raw_material_cost_ids.ids),
-                ("journal_id", "in", mo.raw_material_journal_ids.ids),
-                ]
-            del_lines = obj_line.search(criteria)
-            del_lines.unlink()
+            pass
 
     @api.multi
     def _inverse_direct_labour_cost(self):
