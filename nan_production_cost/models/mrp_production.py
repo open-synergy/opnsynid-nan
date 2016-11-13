@@ -110,6 +110,13 @@ class MrpProduction(models.Model):
     def _inverse_raw_material_cost(self):
         obj_line = self.env["account.analytic.line"]
         for mo in self:
+            criteria = [
+                ("mrp_production_id", "=", mo.id),
+                ("id", "not in", mo.raw_material_cost_ids.ids),
+                ("journal_id", "in", mo.raw_material_journal_ids.ids),
+                ]
+            del_lines = obj_line.search(criteria)
+            del_lines.unlink()
             if not mo.raw_material_cost_ids:
                 pass
             for dl in mo.raw_material_cost_ids:
@@ -126,18 +133,18 @@ class MrpProduction(models.Model):
                         "estim_avg_cost": dl.estim_avg_cost,
                         "mrp_production_id": mo.id,
                         "date": dl.date})
-            # criteria = [
-            #     ("id", "not in", mo.direct_labour_cost_ids.ids),
-            #     ("mrp_production_id", "=", mo.id),
-            #     ("journal_id", "in", mo.direct_labour_journal_ids.ids),
-            #     ]
-            # del_lines = obj_line.search(criteria)
-            # del_lines.unlink()
 
     @api.multi
     def _inverse_direct_labour_cost(self):
         obj_line = self.env["account.analytic.line"]
         for mo in self:
+            criteria = [
+                ("mrp_production_id", "=", mo.id),
+                ("id", "not in", mo.direct_labour_cost_ids.ids),
+                ("journal_id", "in", mo.direct_labour_journal_ids.ids),
+                ]
+            del_lines = obj_line.search(criteria)
+            del_lines.unlink()
             if not mo.direct_labour_cost_ids:
                 pass
             for dl in mo.direct_labour_cost_ids:
@@ -154,18 +161,18 @@ class MrpProduction(models.Model):
                         "estim_avg_cost": dl.estim_avg_cost,
                         "mrp_production_id": mo.id,
                         "date": dl.date})
-            # criteria = [
-            #     ("id", "not in", mo.direct_labour_cost_ids.ids),
-            #     ("mrp_production_id", "=", mo.id),
-            #     ("journal_id", "in", mo.direct_labour_journal_ids.ids),
-            #     ]
-            # del_lines = obj_line.search(criteria)
-            # del_lines.unlink()
 
     @api.multi
     def _inverse_foh_cost(self):
         obj_line = self.env["account.analytic.line"]
         for mo in self:
+            criteria = [
+                ("mrp_production_id", "=", mo.id),
+                ("id", "not in", mo.foh_cost_ids.ids),
+                ("journal_id", "in", mo.foh_journal_ids.ids),
+                ]
+            del_lines = obj_line.search(criteria)
+            del_lines.unlink()
             if not mo.foh_cost_ids:
                 pass
             for dl in mo.foh_cost_ids:
@@ -182,13 +189,6 @@ class MrpProduction(models.Model):
                         "estim_avg_cost": dl.estim_avg_cost,
                         "mrp_production_id": mo.id,
                         "date": dl.date})
-            # criteria = [
-            #     ("id", "not in", mo.foh_cost_ids.ids),
-            #     ("mrp_production_id", "=", mo.id),
-            #     ("journal_id", "in", mo.foh_journal_ids.ids),
-            #     ]
-            # del_lines = obj_line.search(criteria)
-            # del_lines.unlink()
 
     raw_material_journal_ids = fields.Many2many(
         string="Raw Material Journals",

@@ -2,6 +2,7 @@
 # Copyright 2016 OpenSynergy Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from datetime import datetime
 from openerp.tests.common import TransactionCase
 
 
@@ -159,7 +160,7 @@ class ProductionCostCase(TransactionCase):
         else:
             analytic = mo.analytic_account_id
 
-        return self.obj_analytic_line.create({
+        return {
             "name": name,
             "product_id": product and product.id or False,
             "amount": -1.0 * amount,
@@ -167,16 +168,23 @@ class ProductionCostCase(TransactionCase):
             "account_id": analytic.id,
             "general_account_id": account.id,
             "mrp_production_id": mo.id,
-        })
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            }
 
     def _create_direct_labour_cost(
             self, mo, product=False, amount=0.0):
         name = "Direct Labour Cost Example"
-        self._create_cost(
+        data = self._create_cost(
             mo, name, self.journal2, product, amount)
+        mo.write({
+            "direct_labour_cost_ids": [(0, 0, data)]
+            })
 
     def _create_foh_cost(
             self, mo, product=False, amount=0.0):
         name = "FOH Cost Example"
-        self._create_cost(
+        data = self._create_cost(
             mo, name, self.journal3, product, amount)
+        mo.write({
+            "foh_cost_ids": [(0, 0, data)]
+            })
