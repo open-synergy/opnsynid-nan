@@ -117,22 +117,6 @@ class MrpProduction(models.Model):
                 ]
             del_lines = obj_line.search(criteria)
             del_lines.unlink()
-            if not mo.raw_material_cost_ids:
-                pass
-            for dl in mo.raw_material_cost_ids:
-                if isinstance(dl.id, models.NewId):
-                    product = dl.product_id and dl.product_id.id or False
-                    obj_line.create({
-                        "name": dl.name,
-                        "account_id": dl.account_id.id,
-                        "general_account_id": dl.general_account_id.id,
-                        "journal_id": dl.journal_id.id,
-                        "product_id": product,
-                        "amount": dl.amount,
-                        "estim_std_cost": dl.estim_std_cost,
-                        "estim_avg_cost": dl.estim_avg_cost,
-                        "mrp_production_id": mo.id,
-                        "date": dl.date})
 
     @api.multi
     def _inverse_direct_labour_cost(self):
