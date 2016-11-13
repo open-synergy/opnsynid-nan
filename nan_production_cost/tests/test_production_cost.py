@@ -169,7 +169,7 @@ class ProductionCostCase(TransactionCase):
             "general_account_id": account.id,
             "mrp_production_id": mo.id,
             "date": datetime.now().strftime("%Y-%m-%d"),
-            }
+        }
 
     def _create_direct_labour_cost(
             self, mo, product=False, amount=0.0):
@@ -178,7 +178,7 @@ class ProductionCostCase(TransactionCase):
             mo, name, self.journal2, product, amount)
         mo.write({
             "direct_labour_cost_ids": [(0, 0, data)]
-            })
+        })
 
     def _create_foh_cost(
             self, mo, product=False, amount=0.0):
@@ -187,4 +187,4 @@ class ProductionCostCase(TransactionCase):
             mo, name, self.journal3, product, amount)
         mo.write({
             "foh_cost_ids": [(0, 0, data)]
-            })
+        })

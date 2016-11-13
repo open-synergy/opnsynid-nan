@@ -58,53 +58,73 @@ class MrpProduction(models.Model):
     @api.multi
     def _compute_cost(self):
         obj_line = self.env["account.analytic.line"]
-        for production in self:
-            production.byproduct_cost = production.raw_material_cost = \
-                production.direct_labour_cost = production.foh_cost = \
+        for mo in self:
+            mo.byproduct_cost = mo.raw_material_cost = \
+                mo.direct_labour_cost = mo.foh_cost = \
                 0.0
-            production.raw_material_cost_ids = obj_line.search([
-                ("journal_id", "in", production.raw_material_journal_ids.ids),
-                ("mrp_production_id", "=", production.id),
+            mo.raw_material_cost_ids = obj_line.search([
+                ("journal_id", "in", mo.raw_material_journal_ids.ids),
+                ("mrp_production_id", "=", mo.id),
             ])
-            production.direct_labour_cost_ids = obj_line.search([
-                ("journal_id", "in", production.direct_labour_journal_ids.ids),
-                ("mrp_production_id", "=", production.id),
+            mo.direct_labour_cost_ids = obj_line.search([
+                ("journal_id", "in", mo.direct_labour_journal_ids.ids),
+                ("mrp_production_id", "=", mo.id),
             ])
-            production.foh_cost_ids = obj_line.search([
-                ("journal_id", "in", production.foh_journal_ids.ids),
-                ("mrp_production_id", "=", production.id),
+            mo.foh_cost_ids = obj_line.search([
+                ("journal_id", "in", mo.foh_journal_ids.ids),
+                ("mrp_production_id", "=", mo.id),
             ])
-            for cost1 in production.raw_material_cost_ids:
-                production.raw_material_cost += (-1.0 * cost1.amount)
-                production.std_raw_material_cost += (-1.0 *
-                                                     cost1.estim_std_cost)
-                production.avg_raw_material_cost += (-1.0 *
-                                                     cost1.estim_avg_cost)
-            for cost2 in production.direct_labour_cost_ids:
-                production.direct_labour_cost += (-1.0 * cost2.amount)
-                production.std_direct_labour_cost += (-1.0 *
-                                                      cost2.estim_std_cost)
-                production.avg_direct_labour_cost += (-1.0 *
-                                                      cost2.estim_avg_cost)
-            for cost3 in production.foh_cost_ids:
-                production.foh_cost += (-1.0 * cost3.amount)
-                production.std_foh_cost += (-1.0 * cost3.estim_std_cost)
-                production.avg_foh_cost += (-1.0 * cost3.estim_avg_cost)
-            for byproduct in production.byproduct_calculation_ids:
-                production.byproduct_cost += byproduct.byproduct_cost
-                production.avg_byproduct_cost += byproduct.avg_byproduct_cost
-                production.std_byproduct_cost += byproduct.std_byproduct_cost
-            production.avg_cost = production.avg_raw_material_cost - \
-                production.avg_byproduct_cost + \
-                production.avg_direct_labour_cost + \
-                production.avg_foh_cost
-            production.std_cost = production.std_raw_material_cost - \
-                production.std_byproduct_cost + \
-                production.std_direct_labour_cost + \
-                production.std_foh_cost
-            production.main_product_cost = production.raw_material_cost - \
-                production.byproduct_cost + production.direct_labour_cost + \
-                production.foh_cost
+            for cost1 in mo.raw_material_cost_ids:
+                mo.raw_material_cost += (-1.0 * cost1.amount)
+                mo.std_raw_material_cost += (-1.0 *
+                                             cost1.estim_std_cost)
+                mo.avg_raw_material_cost += (-1.0 *
+                                             cost1.estim_avg_cost)
+            for cost2 in mo.direct_labour_cost_ids:
+                mo.direct_labour_cost += (-1.0 * cost2.amount)
+                mo.std_direct_labour_cost += (-1.0 *
+                                              cost2.estim_std_cost)
+                mo.avg_direct_labour_cost += (-1.0 *
+                                              cost2.estim_avg_cost)
+            for cost3 in mo.foh_cost_ids:
+                mo.foh_cost += (-1.0 * cost3.amount)
+                mo.std_foh_cost += (-1.0 * cost3.estim_std_cost)
+                mo.avg_foh_cost += (-1.0 * cost3.estim_avg_cost)
+            for byproduct in mo.byproduct_calculation_ids:
+                mo.byproduct_cost += byproduct.byproduct_cost
+                mo.avg_byproduct_cost += byproduct.avg_byproduct_cost
+                mo.std_byproduct_cost += byproduct.std_byproduct_cost
+            mo.avg_cost = mo.avg_raw_material_cost - \
+                mo.avg_byproduct_cost + \
+                mo.avg_direct_labour_cost + \
+                mo.avg_foh_cost
+            mo.std_cost = mo.std_raw_material_cost - \
+                mo.std_byproduct_cost + \
+                mo.std_direct_labour_cost + \
+                mo.std_foh_cost
+            mo.main_product_cost = mo.raw_material_cost - \
+                mo.byproduct_cost + mo.direct_labour_cost + \
+                mo.foh_cost
+            mo.diff_avg_raw_material_cost = mo.raw_material_cost - \
+                mo.avg_raw_material_cost
+            mo.diff_std_raw_material_cost = mo.raw_material_cost - \
+                mo.std_raw_material_cost
+            mo.diff_avg_direct_labour_cost = mo.direct_labour_cost - \
+                mo.avg_direct_labour_cost
+            mo.diff_std_direct_labour_cost = mo.direct_labour_cost - \
+                mo.std_direct_labour_cost
+            mo.diff_avg_foh_cost = mo.foh_cost - \
+                mo.avg_foh_cost
+            mo.diff_std_foh_cost = mo.foh_cost - \
+                mo.std_foh_cost
+            mo.diff_avg_byproduct_cost = mo.byproduct_cost - \
+                mo.avg_byproduct_cost
+            mo.diff_std_byproduct_cost = mo.byproduct_cost - \
+                mo.std_byproduct_cost
+            mo.diff_avg_main_product_cost = mo.main_product_cost - \
+                mo.avg_cost
+            mo.diff_std_main_product_cost = mo.main_product_cost - \
+                mo.std_cost
 
     @api.multi
     def _inverse_raw_material_cost(self):
@@ -119,7 +139,7 @@ class MrpProduction(models.Model):
                 ("mrp_production_id", "=", mo.id),
                 ("id", "not in", mo.direct_labour_cost_ids.ids),
                 ("journal_id", "in", mo.direct_labour_journal_ids.ids),
-                ]
+            ]
             del_lines = obj_line.search(criteria)
             del_lines.unlink()
             if not mo.direct_labour_cost_ids:
@@ -147,7 +167,7 @@ class MrpProduction(models.Model):
                 ("mrp_production_id", "=", mo.id),
                 ("id", "not in", mo.foh_cost_ids.ids),
                 ("journal_id", "in", mo.foh_journal_ids.ids),
-                ]
+            ]
             del_lines = obj_line.search(criteria)
             del_lines.unlink()
             if not mo.foh_cost_ids:
@@ -283,6 +303,46 @@ class MrpProduction(models.Model):
         compute="_compute_cost",
     )
     std_cost = fields.Float(
+        compute="_compute_cost",
+    )
+    diff_avg_raw_material_cost = fields.Float(
+        string="Raw Material Cost Diff Vs. Avg.",
+        compute="_compute_cost",
+    )
+    diff_std_raw_material_cost = fields.Float(
+        string="Raw Material Cost Diff Vs. Std.",
+        compute="_compute_cost",
+    )
+    diff_avg_direct_labour_cost = fields.Float(
+        string="Direct Labour Cost Diff Vs. Avg.",
+        compute="_compute_cost",
+    )
+    diff_std_direct_labour_cost = fields.Float(
+        string="Direct Labour Cost Diff Vs. Std.",
+        compute="_compute_cost",
+    )
+    diff_avg_foh_cost = fields.Float(
+        string="FoH Cost Diff Vs. Avg.",
+        compute="_compute_cost",
+    )
+    diff_std_foh_cost = fields.Float(
+        string="FoH Cost Diff Vs. Std.",
+        compute="_compute_cost",
+    )
+    diff_avg_byproduct_cost = fields.Float(
+        string="Byproduct Cost Diff Vs. Avg.",
+        compute="_compute_cost",
+    )
+    diff_std_byproduct_cost = fields.Float(
+        string="Byproduct Cost Diff Vs. Std.",
+        compute="_compute_cost",
+    )
+    diff_avg_main_product_cost = fields.Float(
+        string="Main Product Cost Diff Vs. Avg.",
+        compute="_compute_cost",
+    )
+    diff_std_main_product_cost = fields.Float(
+        string="Main Product Cost Diff Vs. Std.",
         compute="_compute_cost",
     )
 

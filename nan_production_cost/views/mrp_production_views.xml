@@ -126,28 +126,42 @@
                             </tree>
                         </field>
                     </group>
-                    <group name="grp_avg_cost_calculation" string="Avg. Cost Calculation">
-                        <field name="avg_raw_material_cost"/>
-                        <field name="avg_direct_labour_cost"/>
-                        <field name="avg_foh_cost"/>
-                        <field name="avg_byproduct_cost"/>
-                        <field name="avg_cost"/>
-                        <!-- <field name="unit_avg_cost"/> -->
-                    </group>
-                    <group name="grp_std_cost_calculation" string="Std. Cost Calculation">
-                        <field name="std_raw_material_cost"/>
-                        <field name="std_direct_labour_cost"/>
-                        <field name="std_foh_cost"/>
-                        <field name="std_byproduct_cost"/>
-                        <field name="std_cost"/>
-                        <!-- <field name="unit_std_cost"/> -->
-                    </group>
-                    <group name="grp_cost_calculation" string="Cost Calculation">
-                        <field name="raw_material_cost"/>
-                        <field name="byproduct_cost"/>
-                        <field name="direct_labour_cost"/>
-                        <field name="foh_cost"/>
-                        <field name="main_product_cost"/>
+                    <group name="grp_cost_calculation" colspan="4" col="2">
+                        <group name="grp_avg_cost_calculation" string="Avg. Cost Calculation" colspan="1" col="2">
+                            <field name="avg_raw_material_cost"/>
+                            <field name="avg_direct_labour_cost"/>
+                            <field name="avg_foh_cost"/>
+                            <field name="avg_byproduct_cost"/>
+                            <field name="avg_cost"/>
+                            <!-- <field name="unit_avg_cost"/> -->
+                        </group>
+                        <group name="grp_std_cost_calculation" string="Std. Cost Calculation" colspan="1" col="2">
+                            <field name="std_raw_material_cost"/>
+                            <field name="std_direct_labour_cost"/>
+                            <field name="std_foh_cost"/>
+                            <field name="std_byproduct_cost"/>
+                            <field name="std_cost"/>
+                            <!-- <field name="unit_std_cost"/> -->
+                        </group>
+                        <group name="grp_cost_calculation" string="Cost Calculation" colspan="1" col="2">
+                            <field name="raw_material_cost"/>
+                            <field name="byproduct_cost"/>
+                            <field name="direct_labour_cost"/>
+                            <field name="foh_cost"/>
+                            <field name="main_product_cost"/>
+                        </group>
+                        <group name="grp_cost_diff_calculation" string="Cost Variant Calculation" colspan="1" col="2">
+                            <field name="diff_avg_raw_material_cost"/>
+                            <field name="diff_std_raw_material_cost"/>
+                            <field name="diff_avg_byproduct_cost"/>
+                            <field name="diff_std_byproduct_cost"/>
+                            <field name="diff_avg_direct_labour_cost"/>
+                            <field name="diff_std_direct_labour_cost"/>
+                            <field name="diff_avg_foh_cost"/>
+                            <field name="diff_std_foh_cost"/>
+                            <field name="diff_avg_main_product_cost"/>
+                            <field name="diff_std_main_product_cost"/>
+                        </group>
                     </group>
                 </page>
             </xpath>
