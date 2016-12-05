@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- © 2016 OpenSynergy Indonesia
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html). -->
+
+<openerp>
+    <data>
+        <record id="purchase_order_view_form" model="ir.ui.view">
+            <field name="name">Purchase Additional Note Form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='notes']" position="after">
+                    <field name="notes_po" placeholder="Notes PO..."/>
+                </xpath>
+            </field>
+        </record>
+   
+    </data>
+</openerp>
+
