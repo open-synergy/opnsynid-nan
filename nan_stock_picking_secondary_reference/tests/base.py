@@ -6,6 +6,7 @@ from openerp.tests.common import TransactionCase
 
 
 class Base(TransactionCase):
+
     def setUp(self):
         super(Base, self).setUp()
         # Object
@@ -29,6 +30,10 @@ class Base(TransactionCase):
             'base.res_partner_1')
         self.partner_2 = self.env.ref(
             'base.res_partner_2')
+
+        # Data Product
+        self.product_1 = self.env.ref(
+            "product.product_product_9")
 
     def _get_next_code(self, sequence):
         d = self.obj_ir_sequence._interpolation_dict()
@@ -57,18 +62,26 @@ class Base(TransactionCase):
 
         return sequence_id
 
-    def _prepare_picking_data(self, picking_type_id):
+    def _prepare_picking_data(self, picking_type):
         partnerA = self.obj_res_partner.create({'name': 'Partner A'})
 
         data_picking = {
             'partner_id': partnerA.id,
-            'picking_type_id': picking_type_id
+            'picking_type_id': picking_type.id,
+            'move_lines': [(0, 0, {
+                'product_id': self.product_1.id,
+                'name': self.product_1.name,
+                'product_uom': self.product_1.uom_id.id,
+                'product_uom_qty': 1.0,
+                'location_id': picking_type.default_location_src_id.id,
+                'location_dest_id': picking_type.default_location_dest_id.id,
+            })],
         }
 
         return data_picking
 
-    def _create_picking(self, picking_type_id):
-        data = self._prepare_picking_data(picking_type_id)
+    def _create_picking(self, picking_type):
+        data = self._prepare_picking_data(picking_type)
         picking = self.obj_picking.create(data)
 
         return picking
