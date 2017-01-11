@@ -16,7 +16,7 @@ class StockPicking(models.Model):
     @api.multi
     def do_transfer(self):
         super(StockPicking, self).\
-            action_done()
+            do_transfer()
         for picking in self:
             if picking.state != "done":
                 continue
